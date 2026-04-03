@@ -1,9 +1,9 @@
 package main
 
 import (
-	"net"
 	"bufio"
 	"fmt"
+	"net"
 	"os"
 	"strings"
 )
