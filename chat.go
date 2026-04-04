@@ -6,6 +6,7 @@ import (
 	"net"
 	"os"
 	"strings"
+	"chat/srv"
 )
 
 func usage() {
@@ -34,6 +35,8 @@ func main() {
 		return
 	}
 	port := os.Args[1]
+
+	go srv.Start(port) // starts server so server can listen while command prompt is active
 
 	reader := bufio.NewReader(os.Stdin)
 
