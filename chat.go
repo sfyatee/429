@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 	"chat/srv"
+	"chat/client"
 )
 
 func usage() {
@@ -45,7 +46,12 @@ func main() {
 		input, _ := reader.ReadString('\n')
 		input = strings.TrimSpace(input)
 
-		switch input {
+		parts := strings.Fields(input)
+		if len(parts) == 0 {
+			continue
+		}
+
+		switch parts[0] {
 		case "help":
 			fmt.Println("Available commands:")
 			fmt.Println("help - display this help message")
@@ -58,6 +64,15 @@ func main() {
 
 		case "myport":
 			fmt.Println(port)
+
+		case "connect":
+			if len(parts) != 3 {
+				fmt.Println("Usage: connect <IP> <port>")
+				continue
+			}
+			ip := parts[1]
+			destPort := parts[2]
+			client.Start(ip, destPort)
 
 		case "exit":
 			fmt.Println("Exiting program.")
