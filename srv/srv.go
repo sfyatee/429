@@ -21,6 +21,6 @@ func Start(port string) {
 			continue
 		}
 		fmt.Println("New connection from", conn.RemoteAddr())
-		conn.Close()
+		_ = conn
 	}
 }
