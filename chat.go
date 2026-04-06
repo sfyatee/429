@@ -111,6 +111,29 @@ func main() {
 				fmt.Printf("%d: %s %s\n", peer.ID, peer.IP, peer.Port)
 			}	
 
+		case "terminate":
+			if len(parts) != 2 {
+				fmt.Println("Usage: terminate <connection id>")
+				continue
+			}
+
+			idStr := parts[1]
+			found := false
+
+			for i, peer := range peers {
+				if fmt. Sprintf("%d", peer.ID) == idStr {
+					peer.Conn.Close()
+
+					peers = append(peers[:i], peers[i+1:]...)
+					fmt.Println("Connection has been terminated:", idStr)
+					found = true
+					break
+				}
+			}
+			if !found {
+				fmt.Println("Connection not found:", idStr)
+			}
+
 		case "exit":
 			fmt.Println("Exiting program.")
 			return
