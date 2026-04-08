@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"strconv"
 	"strings"
 
-	"chat/srv"
 	"chat/client"
+	"chat/srv"
+
 )
 
 func usage() {
@@ -69,6 +71,8 @@ func main() {
 			fmt.Println("myport - display the port number this program is listening on")
 			fmt.Println("connect <IP> <port> - connect to another peer")
 			fmt.Println("list - display all active connections")
+			fmt.Println("terminate <id> - terminate a specific connection")
+			fmt.Println("send <id> <message> - send a message to a specific connection")
 			fmt.Println("exit - exit the program")
 
 
@@ -134,7 +138,42 @@ func main() {
 				fmt.Println("Connection not found:", idStr)
 			}
 
+		case "send":
+			if len(parts) < 3 {
+				fmt.Println("Usage: send <connection id> <message>")
+				continue
+			}
+
+			id, err := strconv.Atoi(parts[1])
+			if err != nil {
+				fmt.Println("Invalid connection id")
+				continue
+			}
+
+			msgText := strings.Join(parts[2:], " ")
+
+			found := false
+			for _, peer := range peers {
+				if peer.ID == id {
+					_, err := peer.Conn.Write([]byte(msgText + "\n"))
+					if err != nil {
+						fmt.Println("Error sending message")
+					} else {
+						fmt.Println("Message sent to connection", id)
+					}
+					found = true
+					break
+				}
+			}
+
+			if !found {
+				fmt.Println("Connection not found:", id)
+			}
 		case "exit":
+			for _, peer := range peers {
+				peer.Conn.Close()
+			}
+			
 			fmt.Println("Exiting program.")
 			return
 

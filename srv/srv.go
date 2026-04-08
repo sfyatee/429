@@ -1,11 +1,27 @@
 package srv
 
 import (
-	"log"
+	// "log"
+	"bufio"
 	"fmt"
 	"net"
 )
 
+func handleConnection(conn net.Conn) {
+	reader := bufio.NewReader(conn)
+
+	for {
+		message, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Println("Connection closed by", conn.RemoteAddr())
+			conn.Close()
+			return
+		}
+		fmt.Println("Message from", conn.RemoteAddr())
+		fmt.Print("Message: ", message)
+		fmt.Print("chat> ")
+	}
+}
 func Start(port string) {
 	listener, err := net.Listen("tcp", ":" + port)
 	if err != nil {
@@ -17,10 +33,10 @@ func Start(port string) {
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
-			log.Println("Error accepting connection:", err)
+			fmt.Println("Error accepting connection:", err)
 			continue
 		}
 		fmt.Println("New connection from", conn.RemoteAddr())
-		_ = conn
+		go handleConnection(conn)
 	}
 }
