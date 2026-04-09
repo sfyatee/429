@@ -1,9 +1,18 @@
 # COMP429-Project
 
+## Building
+Download golang from here.
+https://go.dev/dl/
+
+And a simple go run . from this directory will work.
+
 ## Contributions
 
 ### Demian Garcia
--
+= Added peer/connection tracking for both incoming and outgoing TCP connections
+- Implemented handling for connect, list, send, terminate, and exit
+- Added error handling for invalid input, dupe connections, self-connections, and missing connection IDs
+- Added disconnect cleanup so terminated peers are removed from the active connection list on both sides
 
 ### Bella Felipe
 - Implemented command-line interface (input parsing, command handling)
